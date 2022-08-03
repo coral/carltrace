@@ -30,16 +30,16 @@ impl Overview {
         c: &mut sdl2::render::Canvas<sdl2::video::Window>,
         s: &State,
     ) -> Result<(), String> {
-        for n in (0..800).step_by(5) {
+        for n in (0..800).step_by(10) {
             let xx = s.camera.x + (n as f64 * angle.to_radians().cos());
             let yy = s.camera.y + (n as f64 * angle.to_radians().sin());
 
             match s.map.intersects(xx, yy) {
                 true => {
-                    c.filled_circle(xx as i16, yy as i16, 10, Color::RGB(0, 255, 0))?;
+                    c.filled_circle(xx as i16, yy as i16, 5, Color::RGB(0, 255, 0))?;
                     return Ok(());
                 }
-                false => c.filled_circle(xx as i16, yy as i16, 2, Color::RGB(255, 255, 0))?,
+                false => c.filled_circle(xx as i16, yy as i16, 1, Color::RGB(255, 255, 0))?,
             }
         }
 
