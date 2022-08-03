@@ -1,5 +1,4 @@
-use anyhow::{Context, Result};
-use sdl2::event::Event;
+use anyhow::Result;
 use sdl2::keyboard::Keycode;
 
 pub struct State {
@@ -33,18 +32,18 @@ impl State {
         let a = self.camera.angle;
 
         match k {
-            Keycode::Up => {
+            Keycode::Up | Keycode::W => {
                 self.camera.x = cx + (mx * a.to_radians().cos());
                 self.camera.y = cy + (mx * a.to_radians().sin());
             }
-            Keycode::Down => {
+            Keycode::Down | Keycode::S => {
                 self.camera.x = cx - (mx * a.to_radians().cos());
                 self.camera.y = cy - (mx * a.to_radians().sin());
             }
-            Keycode::Left => {
+            Keycode::Left | Keycode::A => {
                 self.camera.angle = self.camera.angle - self.camera.turn_speed;
             }
-            Keycode::Right => {
+            Keycode::Right | Keycode::D => {
                 self.camera.angle = self.camera.angle + self.camera.turn_speed;
             }
             _ => {}
@@ -113,6 +112,7 @@ impl Map {
         })
     }
 
+    #[allow(dead_code)]
     pub fn print_map(&self) {
         println!("\n");
         self.structure.iter().for_each(|row| {

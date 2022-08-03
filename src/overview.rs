@@ -1,5 +1,5 @@
 use crate::state::State;
-use anyhow::{Context, Result};
+//use anyhow::{Context, Result};
 use sdl2::gfx::primitives::DrawRenderer;
 use sdl2::pixels::Color;
 use sdl2::rect::{Point, Rect};
@@ -13,7 +13,7 @@ pub struct Overview {
 }
 
 impl Overview {
-    pub fn bootstrap(w: sdl2::video::Window) -> Result<Overview> {
+    pub fn bootstrap(w: sdl2::video::Window) -> anyhow::Result<Overview> {
         let canvas = w.into_canvas().build()?;
         let (w, h) = canvas.window().size();
 
@@ -25,7 +25,7 @@ impl Overview {
         })
     }
 
-    pub fn draw_state(&mut self, s: &State) -> Result<()> {
+    pub fn draw_state(&mut self, s: &State) -> Result<(), String> {
         let c = &mut self.c;
         c.set_draw_color(Color::RGB(0, 0, 0));
         c.clear();
@@ -42,23 +42,18 @@ impl Overview {
                 match i {
                     true => {
                         c.set_draw_color(Color::RGB(100, 50, 0));
-                        c.fill_rect(Rect::new(
-                            (row as i32) * sw as i32,
-                            (col as i32) * sw as i32,
-                            sw,
-                            sw,
-                        ));
                     }
                     false => {
                         c.set_draw_color(Color::RGB(40, 40, 40));
-                        c.fill_rect(Rect::new(
-                            (row as i32) * sw as i32,
-                            (col as i32) * sw as i32,
-                            sw,
-                            sw,
-                        ));
                     }
                 }
+                c.fill_rect(Rect::new(
+                    (row as i32) * sw as i32,
+                    (col as i32) * sw as i32,
+                    sw,
+                    sw,
+                ))
+                .unwrap();
             })
         });
 
@@ -69,13 +64,13 @@ impl Overview {
             c.draw_line(
                 Point::new((i as u32 * sw) as i32, 0),
                 Point::new((i as u32 * sw) as i32, 800),
-            );
+            )?;
 
             // Y
             c.draw_line(
                 Point::new(0, (i as u32 * sw) as i32),
                 Point::new(800, (i as u32 * sw) as i32),
-            );
+            )?;
         }
 
         // Draw camera
@@ -84,7 +79,7 @@ impl Overview {
             s.camera.y as i16,
             10,
             Color::RGB(255, 0, 0),
-        );
+        )?;
 
         c.thick_line(
             s.camera.x as i16,
@@ -95,7 +90,7 @@ impl Overview {
                 as i16,
             2,
             Color::RGB(255, 0, 0),
-        );
+        )?;
 
         c.present();
 
