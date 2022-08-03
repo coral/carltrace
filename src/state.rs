@@ -17,7 +17,7 @@ impl State {
                 x: 100.0,
                 y: 100.0,
                 angle: 120.0,
-                fov: 90.0,
+                fov: 70.0,
                 angle_draw_distance: 40.0,
                 movement_speed: 4.81,
                 turn_speed: 4.0,
