@@ -18,12 +18,12 @@ pub fn main() -> Result<()> {
 
     let window = video_subsystem
         .window("rust-sdl2 demo", 800, 600)
-        .position_centered()
+        .position(0, 0)
         .build()?;
 
     let mut ovw = video_subsystem
-        .window("overview", 800, 600)
-        .position_centered()
+        .window("overview", 800, 1000)
+        .position(800, 0)
         .build()?;
 
     let mut overview = Overview::bootstrap(ovw)?;

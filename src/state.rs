@@ -9,7 +9,7 @@ pub struct State {
 
 impl State {
     pub fn new() -> Result<State> {
-        let map = Map::new()?;
+        let map = Map::new(10, 10)?;
         //map.print_map();
 
         Ok(State {
