@@ -22,7 +22,7 @@ pub fn main() -> Result<()> {
         .position(0, 0)
         .build()?;
 
-    let mut ovw = video_subsystem
+    let ovw = video_subsystem
         .window("overview", 800, 800)
         .position(820, 0)
         .build()?;
@@ -33,12 +33,13 @@ pub fn main() -> Result<()> {
 
     let mut event_pump = sdl_context.event_pump().unwrap();
     'running: loop {
-        //Draw overview
-        match overview.draw_state(&st) {
+        // Draw overview
+        match overview.draw(&st) {
             Err(e) => println!("could not draw state: {}", e),
             _ => {}
         }
 
+        // Draw raycaster
         tr.draw(&st);
 
         for event in event_pump.poll_iter() {

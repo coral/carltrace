@@ -88,10 +88,10 @@ impl Map {
                 true, false, false, false, false, false, false, false, false, true,
             ],
             vec![
-                true, false, false, false, false, false, false, false, false, true,
+                true, false, false, true, true, true, false, false, false, true,
             ],
             vec![
-                true, false, false, false, false, false, false, false, false, true,
+                true, false, false, true, false, true, false, false, false, true,
             ],
             vec![
                 true, false, false, false, false, false, false, false, false, true,
@@ -123,5 +123,20 @@ impl Map {
             })
         });
         println!("");
+    }
+
+    pub fn intersects(&self, x: f64, y: f64) -> bool {
+        let xx = (x / 80.0).floor() as usize;
+        let yy = (y / 80.0).floor() as usize;
+
+        if xx > self.structure.len() - 1 {
+            return false;
+        }
+
+        if yy > self.structure[xx].len() - 1 {
+            return false;
+        }
+
+        self.structure[xx][yy]
     }
 }

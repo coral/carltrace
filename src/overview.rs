@@ -25,7 +25,27 @@ impl Overview {
         })
     }
 
-    pub fn draw_state(&mut self, s: &State) -> Result<(), String> {
+    pub fn trace(
+        c: &mut sdl2::render::Canvas<sdl2::video::Window>,
+        s: &State,
+    ) -> Result<(), String> {
+        for n in 0..800 {
+            let xx = s.camera.x + (n as f64 * s.camera.angle.to_radians().cos());
+            let yy = s.camera.y + (n as f64 * s.camera.angle.to_radians().sin());
+
+            match s.map.intersects(xx, yy) {
+                true => {
+                    c.filled_circle(xx as i16, yy as i16, 4, Color::RGB(0, 255, 0))?;
+                    return Ok(());
+                }
+                false => c.filled_circle(xx as i16, yy as i16, 4, Color::RGB(255, 255, 0))?,
+            }
+        }
+
+        Ok(())
+    }
+
+    pub fn draw(&mut self, s: &State) -> Result<(), String> {
         let c = &mut self.c;
         c.set_draw_color(Color::RGB(0, 0, 0));
         c.clear();
@@ -33,8 +53,6 @@ impl Overview {
         let sw = (self.w as f64 / s.map.width as f64) as u32;
 
         // Draw Map
-
-        //
         s.map.structure.iter().enumerate().for_each(|(row, rd)| {
             rd.iter().enumerate().for_each(|(col, i)| {
                 let x = 0.0;
@@ -74,6 +92,26 @@ impl Overview {
         }
 
         // Draw camera
+        let la = s.camera.angle - (s.camera.fov / 2.0);
+        let ll = s.camera.angle + (s.camera.fov / 2.0);
+        // Frustrum
+        c.thick_line(
+            s.camera.x as i16,
+            s.camera.y as i16,
+            (s.camera.x + (s.camera.angle_draw_distance * 2.0 * la.to_radians().cos())) as i16,
+            (s.camera.y + (s.camera.angle_draw_distance * 2.0 * la.to_radians().sin())) as i16,
+            1,
+            Color::RGB(135, 135, 135),
+        )?;
+        c.thick_line(
+            s.camera.x as i16,
+            s.camera.y as i16,
+            (s.camera.x + (s.camera.angle_draw_distance * 2.0 * ll.to_radians().cos())) as i16,
+            (s.camera.y + (s.camera.angle_draw_distance * 2.0 * ll.to_radians().sin())) as i16,
+            1,
+            Color::RGB(135, 135, 135),
+        )?;
+
         c.filled_circle(
             s.camera.x as i16,
             s.camera.y as i16,
@@ -81,6 +119,7 @@ impl Overview {
             Color::RGB(255, 0, 0),
         )?;
 
+        // Pointive
         c.thick_line(
             s.camera.x as i16,
             s.camera.y as i16,
@@ -92,8 +131,9 @@ impl Overview {
             Color::RGB(255, 0, 0),
         )?;
 
-        c.present();
+        Overview::trace(c, s)?;
 
+        c.present();
         Ok(())
     }
 }

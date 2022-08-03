@@ -15,7 +15,7 @@ impl Tracer {
     }
 
     pub fn draw(&mut self, s: &State) {
-        let mut canvas = &mut self.c;
+        let canvas = &mut self.c;
 
         //self.i = (self.i + 1) % 255;
         let i = (s.camera.angle as i64 % 255) as u8;
